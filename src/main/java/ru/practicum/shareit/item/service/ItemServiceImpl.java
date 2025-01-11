@@ -24,7 +24,7 @@ public class ItemServiceImpl  implements ItemService {
     @Override
     public ItemDto createItem(ItemDto itemDto, Long userId) {
         Item item = ItemMapper.mapToItem(itemDto);
-        if (userRepository.getUserById(userId).isPresent()) {
+        if (userRepository.getUserById(userId).isEmpty()) {
             throw new NotFoundException("Не найден пользоватль с id=" + userId);
         }
         item.setOwner(userId);
