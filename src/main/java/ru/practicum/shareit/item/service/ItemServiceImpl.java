@@ -8,6 +8,7 @@ import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
+import ru.practicum.shareit.user.repository.UserRepository;
 
 import java.util.Collection;
 import java.util.List;
@@ -18,10 +19,14 @@ import java.util.List;
 public class ItemServiceImpl  implements ItemService {
 
     private final ItemRepository itemRepository;
+    private final UserRepository userRepository;
 
     @Override
     public ItemDto createItem(ItemDto itemDto, Long userId) {
         Item item = ItemMapper.mapToItem(itemDto);
+        if (!userRepository.getAll().contains(userId)) {
+            throw new NotFoundException("Не найден пользоватль с id=" + userId);
+        }
         item.setOwner(userId);
         return ItemMapper.mapToItemDto(itemRepository.createItem(item));
     }
