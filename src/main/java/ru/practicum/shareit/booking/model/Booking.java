@@ -23,10 +23,10 @@ public class Booking {
     @Column(name = "end_date", nullable = false)
     private LocalDateTime end;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "item_id", referencedColumnName = "item_id")
+    @JoinColumn(name = "item_id", referencedColumnName = "id")
     private Item item;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
+    @JoinColumn(name = "booker_id", referencedColumnName = "id")
     private User booker;
     @Enumerated(EnumType.STRING)
     private BookingStatus status;

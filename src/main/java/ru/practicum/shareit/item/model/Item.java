@@ -19,14 +19,13 @@ public class Item {
     private Long id;
     @Column(nullable = false, length = 255)
     private String name;
-    @Column(nullable = false, length = 1024)
+    @Column(nullable = false, length = 500)
     private String description;
-    @Column(nullable = false)
+    @Column(name = "is_available", nullable = false)
     private Boolean available;
     @ManyToOne
-    @JoinColumn(name = "owner_id", referencedColumnName = "user_id")
+    @JoinColumn(name = "owner_id", referencedColumnName = "id")
     private User owner;
-
     public Item(String name, String description, Boolean available) {
         this.name = name;
         this.description = description;
