@@ -26,6 +26,7 @@ public class Item {
     @ManyToOne
     @JoinColumn(name = "owner_id", referencedColumnName = "id")
     private User owner;
+
     public Item(String name, String description, Boolean available) {
         this.name = name;
         this.description = description;
