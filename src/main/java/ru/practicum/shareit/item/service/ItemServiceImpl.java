@@ -3,6 +3,10 @@ package ru.practicum.shareit.item.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ru.practicum.shareit.booking.model.Booking;
+import ru.practicum.shareit.booking.model.BookingStatus;
+import ru.practicum.shareit.booking.repository.BookingRepository;
+import ru.practicum.shareit.exceptions.NotAvailableForBooking;
 import ru.practicum.shareit.exceptions.NotFoundException;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
@@ -14,8 +18,6 @@ import ru.practicum.shareit.item.repository.CommentRepository;
 import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
-import ru.practicum.shareit.booking.model.Booking;
-import ru.practicum.shareit.booking.repository.BookingRepository;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -80,12 +82,8 @@ public class ItemServiceImpl implements ItemService {
             nextBooking = bookingRepository.findNextBookingForItem(userId, itemId, LocalDateTime.now())
                     .map(Booking::getStart).orElse(null);
         }
-        return ItemMapper.mapToItemDto(item, lastBooking, nextBooking, comments);
-    }
 
-    @Override
-    public void deleteItem(Long itemId) {
-        itemRepository.deleteById(itemId);
+        return ItemMapper.mapToItemDto(item, lastBooking, nextBooking, comments);
     }
 
     @Override
@@ -121,7 +119,15 @@ public class ItemServiceImpl implements ItemService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("Не найден пользователь с id=" + userId));
         Item item = itemRepository.findById(itemId)
-                .orElseThrow(() -> new NotFoundException("Не найден предмет с id=" + itemId));
+                .orElseThrow(() -> new NotFoundException("Не найден предмет с id = " + itemId));
+        List<Booking> bookings = bookingRepository.findAllByItem_IdAndBooker_IdAndStatus(itemId,
+                        userId, BookingStatus.APPROVED)
+                .stream()
+                .filter(booking -> booking.getStart().isBefore(LocalDateTime.now()))
+                .toList();
+        if (bookings.isEmpty()) {
+            throw new NotAvailableForBooking("Пользователь ничего не забронировал");
+        }
         commentDto.setAuthorName(user.getName());
         commentDto.setCreated(LocalDateTime.now());
         Comment comment = CommentMapper.mapCommentDtoToComment(commentDto);

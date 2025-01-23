@@ -9,7 +9,7 @@ import java.util.List;
 
 @Repository
 public interface ItemRepository extends JpaRepository<Item, Long> {
-    @Query(" SELECT i FROM items i " +
+    @Query(" SELECT i FROM Item i " +
             " WHERE UPPER(i.name) LIKE UPPER(CONCAT('%', ?1, '%')) " +
             " OR UPPER(i.description) like UPPER(concat('%', ?1, '%'))")
     List<Item> getByContext(String text);

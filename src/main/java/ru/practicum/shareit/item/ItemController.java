@@ -43,12 +43,6 @@ public class ItemController {
         return response;
     }
 
-    @DeleteMapping("/{itemId}")
-    public void deleteItem(@PathVariable Long itemId) {
-        log.info("Получен запрос DELETE /items/{}", itemId);
-        itemService.deleteItem(itemId);
-    }
-
     @GetMapping("/{itemId}")
     public ItemDto getItemById(@RequestHeader("X-Sharer-User-Id") Long userId, @PathVariable Long itemId) {
         log.info("Получен запрос GET /items/{}", itemId);
