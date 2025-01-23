@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.service.ItemService;
 
@@ -62,6 +63,15 @@ public class ItemController {
         log.info("Получен запрос GET /items/search с контекстом = {}", text);
         List<ItemDto> response = itemService.getByContext(text, userId);
         log.info("Получен ответ GET с телом ответа {}", response);
+        return response;
+    }
+
+    @PostMapping("/{itemId}/comment")
+    public CommentDto createComment(@RequestHeader("X-Sharer-User-Id") Long userId, @PathVariable Long itemId,
+                                    @Valid @RequestBody CommentDto commentDto) {
+        log.info("Получен запрос POST /{}/comment с телом запроса {} для пользователя {}", itemId, commentDto, userId);
+        CommentDto response = itemService.createComment(itemId, userId, commentDto);
+        log.info("Получен ответ POST с телом ответа {}", response);
         return response;
     }
 }
