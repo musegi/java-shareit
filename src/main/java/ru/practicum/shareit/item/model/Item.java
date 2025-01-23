@@ -7,12 +7,12 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import ru.practicum.shareit.user.model.User;
 
-@Entity
+@Entity(name = "items")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "items")
+@Table
 public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
