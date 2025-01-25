@@ -50,12 +50,7 @@ public class BookingController {
     public List<BookingDtoOutput> getAllBookingsForBooker(@RequestHeader("X-Sharer-User-Id") Long userId,
                                                          @RequestParam(name = "state", defaultValue = "ALL") String state) {
         log.info("Получен запрос GET для всех броней для пользователя с id = " + userId);
-        BookingState stateEnum;
-        try {
-            stateEnum = BookingState.valueOf(state.toUpperCase());
-        } catch (IllegalArgumentException e) {
-            throw new BadRequestException("Неверное значение параметра статуса");
-        }
+        BookingState stateEnum = BookingState.valueOf(state.toUpperCase());
         List<BookingDtoOutput> response = bookingService.getBookingsForBooker(userId,
                 stateEnum);
         log.info("Получен ответ GET с телом ответа {}", response);
@@ -66,12 +61,7 @@ public class BookingController {
     public List<BookingDtoOutput> getAllBookingsForOwner(@RequestHeader("X-Sharer-User-Id") Long userId,
                                                          @RequestParam(name = "state", defaultValue = "ALL") String state) {
         log.info("Получен запрос GET на получение всех броней для владельца с id = " + userId);
-        BookingState stateEnum;
-        try {
-            stateEnum = BookingState.valueOf(state.toUpperCase());
-        } catch (IllegalArgumentException e) {
-            throw new BadRequestException("Неверное значение параметра статуса");
-        }
+        BookingState stateEnum = BookingState.valueOf(state.toUpperCase());
         List<BookingDtoOutput> response = bookingService.getBookingsForOwner(userId,
                 stateEnum);
         log.info("Поулчен ответ GET с телом ответа{}", response);
